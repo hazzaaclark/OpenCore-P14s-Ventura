@@ -20,4 +20,29 @@ DefinitionBlock("", "SSDT", 2, "ACDT", "BAT0",0x00000000)
     External (_SB_.PCI0.LPCB.EC.BAT1._BST, MethodObj)
     External (_SB_.PCI0.LPCB.EC.BAT1._HID, IntObj)
     External (_SB_.PCI0.LPCB.EC.BAT1._STA, MethodObj)
+
+    Scope (\_SB.PCIO.LPCB.EC)
+    {
+        Device (BAT0)
+        {
+            Name (_HID, ("LNV-5B10W51860"))
+            Name (_UID, 0x02)
+        
+            // INTIALISE THE CONCURRENT POWER SOURCES
+            // PARSE THE CONTENTS TO THE KERNEL
+
+            Method (_INI)
+            {
+                If (_OSI ("Darwin"))
+                {
+                    Return (^^BAT0._STA () | ^^BAT1._STA ())
+                }
+
+                Else
+                {
+                    Return (Zero)
+                }
+            }
+        }
+    }
 }
